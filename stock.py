@@ -64,19 +64,3 @@ if save == "yes":
     print("✅ Data saved to portfolio.csv and portfolio.txt")
 
 print("📊 Program Finished!")
-import csv
-
-# Portfolio list pehle se bani hogi
-# portfolio = []
-
-# Jab user 'done' type kare uske baad ye likho:DONE
-
-
-with open("portfolio.csv", "w", newline="") as file:
-    writer = csv.writer(file)
-    writer.writerow(["Stock Name", "Quantity", "Investment"])
-
-    for item in portfolio:
-        writer.writerow(item)
-
-print("✅ Data successfully saved to portfolio.csv")
