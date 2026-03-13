@@ -1,66 +1,68 @@
 import csv
+import os
 
-# Predefined stock prices
-stock_prices = {
-    "AAPL": 180,
-    "TSLA": 250,
-    "GOOG": 2700,
-    "MSFT": 320,
-    "AMZN": 3300
-}
+csv_file = "stocks.csv"
+txt_file = "stocks.txt"
 
-total_investment = 0
-portfolio_data = []
-
-print("📈 Welcome to Stock Portfolio Tracker")
-print("Available Stocks:", ", ".join(stock_prices.keys()))
-
-while True:
-    stock_name = input("\nEnter stock name (or type 'done' to finish): ").upper()
-    
-    if stock_name == "DONE":
-        break
-    
-    if stock_name in stock_prices:
-        try:
-            quantity = int(input("Enter quantity: "))
-        except ValueError:
-            print("❌ Please enter a valid number.")
-            continue
-
-        price = stock_prices[stock_name]
-        investment = price * quantity
-        total_investment += investment
-        
-        portfolio_data.append([stock_name, price, quantity, investment])
-        
-        print(f"Added {stock_name} - Investment: Rs.{investment}")
-    else:
-        print("❌ Stock not available.")
-
-print("\n💰 Total Investment Value: ", total_investment)
-
-save = input("Do you want to save result to file? (yes/no): ").lower()
-
-if save == "yes":
-    
-    # 🔹 Save CSV file
-    with open("portfolio.csv", "w", newline="") as file:
+# ----------- CSV FILE CREATE -----------
+if not os.path.exists(csv_file):
+    with open(csv_file, "w", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow(["Stock Name", "Price", "Quantity", "Investment"])
-        writer.writerows(portfolio_data)
-        writer.writerow([])
-        writer.writerow(["Total Investment", "", "", total_investment])
+        writer.writerow(["Stock", "Quantity", "Price"])
+        writer.writerow(["RELIANCE", 10, 2500])
+        writer.writerow(["TCS", 5, 3800])
+        writer.writerow(["INFY", 8, 1500])
+        writer.writerow(["HDFCBANK", 6, 1600])
+        writer.writerow(["ICICIBANK", 7, 1000])
+        writer.writerow(["SBIN", 12, 600])
+        writer.writerow(["ITC", 15, 450])
 
-    # 🔹 Save TXT file
-    with open("portfolio.txt", "w") as file:
-        file.write("Stock Portfolio Summary\n")
-        file.write("------------------------\n")
-        for data in portfolio_data:
-            file.write(f"Stock: {data[0]}, Price: {data[1]}, Quantity: {data[2]}, Investment: {data[3]}\n")
-        file.write("\n")
-        file.write(f"Total Investment: Rs.{total_investment}")
+# ----------- TXT FILE CREATE -----------
+if not os.path.exists(txt_file):
+    with open(txt_file, "w") as file:
+        file.write("RELIANCE,10,2500\n")
+        file.write("TCS,5,3800\n")
+        file.write("INFY,8,1500\n")
+        file.write("HDFCBANK,6,1600\n")
+        file.write("ICICIBANK,7,1000\n")
+        file.write("SBIN,12,600\n")
+        file.write("ITC,15,450\n")
 
-    print("✅ Data saved to portfolio.csv and portfolio.txt")
+# ----------- READ CSV FILE -----------
+print("------ Data From CSV File ------")
+total_investment_csv = 0
 
-print("📊 Program Finished!")
+with open(csv_file, "r") as file:
+    reader = csv.reader(file)
+    next(reader)
+
+    for row in reader:
+        stock = row[0]
+        quantity = int(row[1])
+        price = int(row[2])
+
+        investment = quantity * price
+        total_investment_csv += investment
+
+        print(stock, ":", quantity, "shares ×", price, "=", investment)
+
+print("Total Investment (CSV) =", total_investment_csv)
+
+print("\n------ Data From TXT File ------")
+
+# ----------- READ TXT FILE -----------
+total_investment_txt = 0
+
+with open(txt_file, "r") as file:
+    for line in file:
+        stock, quantity, price = line.strip().split(",")
+
+        quantity = int(quantity)
+        price = int(price)
+
+        investment = quantity * price
+        total_investment_txt += investment
+
+        print(stock, ":", quantity, "shares ×", price, "=", investment)
+
+print("Total Investment (TXT) =", total_investment_txt)
